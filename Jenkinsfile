@@ -23,17 +23,17 @@ pipeline {
             sh '''mvn clean package'''
          }
       }
-
+      stage('Login to dockerhub'){
+         steps {
+            sh 'echo ${DOCKERHUB_CRED_PSW} | docker login -u ${YOUR_DOCKERHUB_USERNAME} --password-stdin'
+         }
+      }
       stage('Build image') {
          steps {
            sh 'docker image build -t ${REPOSITORY_TAG} .'
          }
       }
-      stage('Login to dockerhub'){
-         steps {
-            sh 'echo ${DOCKERHUB_CRED} | docker login -u ${YOUR_DOCKERHUB_USERNAME} --password-stdin'
-         }
-      }
+
       stage('Push to dockerhub') {
          steps{
             sh 'docker push ${REPOSITORY_TAG}'
