@@ -8,6 +8,7 @@ pipeline {
 
      SERVICE_NAME = "fleetman-api-gateway"
      REPOSITORY_TAG="${YOUR_DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
+     DOCKERHUB_CRED=credentials('dockerhub')
    }
 
    stages {
@@ -23,9 +24,19 @@ pipeline {
          }
       }
 
-      stage('Build and Push Image') {
+      stage('Build') {
          steps {
            sh 'docker image build -t ${REPOSITORY_TAG} .'
+         }
+      }
+      stage('Login to dockerhub'){
+         steps {
+            sh 'echo ${DOCKERHUB_CRED} | docker login -u ${YOUR_DOCKERHUB_USERNAME} --password-stdin'
+         }
+      }
+      stage('Push to dockerhub){
+         steps{
+            sh 'docker push ${REPOSITORY_TAG}'
          }
       }
 
