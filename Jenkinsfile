@@ -34,7 +34,7 @@ pipeline {
             sh 'echo ${DOCKERHUB_CRED} | docker login -u ${YOUR_DOCKERHUB_USERNAME} --password-stdin'
          }
       }
-      stage('Push to dockerhub){
+      stage('Push to dockerhub') {
          steps{
             sh 'docker push ${REPOSITORY_TAG}'
          }
